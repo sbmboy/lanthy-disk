@@ -1,0 +1,1095 @@
+a:focus,
+:focus {
+    outline: 0
+}
+
+.tang-pass-login a,
+.tang-pass-login label,
+.tang-pass-login p,
+.tang-pass-login li,
+.tang-pass-login input {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+.tang-pass-login input[type=submit] {
+    -webkit-appearance: none;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box
+}
+
+.tang-pass-login input::-webkit-input-placeholder,
+.tang-pass-login input:-ms-input-placeholder,
+.tang-pass-login input:-moz-placeholder {
+    color: #ccc
+}
+
+.tang-pass-login .pass-form-item {
+    margin-bottom: 16px
+}
+
+.tang-pass-login {
+    position: relative
+}
+
+.tang-pass-login a {
+    text-decoration: none;
+    color: #2e82ff
+}
+
+.tang-pass-login a:hover {
+    text-decoration: none
+}
+
+.tang-pass-login .pass-generalErrorWrapper {
+    height: auto;
+    _height: 24px;
+    min-height: 24px;
+    color: #fc4343;
+    padding-bottom: 2px
+}
+
+.tang-pass-login .pass-generalError {
+    display: block;
+    font-size: 12px;
+    line-height: 14px;
+    padding-top: 8px
+}
+
+.tang-pass-login .pass-form {
+    padding: 0 28px
+}
+
+.tang-pass-login .pass-form-item {
+    position: relative;
+    clear: both;
+    z-index: 18
+}
+
+.tang-pass-login .pass-form-item.pass-form-item-userName {
+    z-index: 21
+}
+
+input::-ms-clear,
+input::-ms-reveal {
+    display: none
+}
+
+.tang-pass-login .pass-form-item .pass-text-input {
+    position: relative;
+    z-index: 17;
+    display: block;
+    padding: 10px 8px;
+    margin: 0;
+    height: 20px;
+    line-height: 20px;
+    width: 300px;
+    border: 1px solid #dedede;
+    font-size: 12px;
+    color: #666;
+    transition: .3s;
+    font-family: Tahoma, Helvetica, "Microsoft Yahei", "å¾®è½¯é›…é»‘", Arial, STHeiti
+}
+
+.tang-pass-login .pass-form-item .pass-text-input-focus {
+    border-color: #488ee7
+}
+
+.tang-pass-login .pass-form-item .pass-text-input-error {
+    border-color: #fc4343
+}
+
+.tang-pass-login .pass-form-item .pass-text-input-verifyCode {
+    width: 130px;
+    float: left
+}
+
+.tang-pass-login .pass-form-item input.pass-text-input-userName,
+.tang-pass-login .pass-form-item input.pass-text-input-password {
+    padding-left: 8px;
+    width: 284px
+}
+
+.tang-pass-login .pass-form-item .pass-item-selectbtn-userName {
+    position: absolute;
+    display: block;
+    height: 16px;
+    width: 16px;
+    background: url(https://passport.baidu.com/passApi/img/pass_login_icons.png) no-repeat 0 -30px;
+    top: 6px;
+    right: 31px;
+    _right: 50px;
+    cursor: pointer
+}
+
+.tang-pass-login .pass-form-item .pass-item-selectbtn-userName:hover {
+    background-position: 0 -46px
+}
+
+.tang-pass-login .pass-form-item span.open {
+    background-position: -18px -30px
+}
+
+.tang-pass-login .pass-form-item span.open:hover {
+    background-position: -18px -46px
+}
+
+.tang-pass-login .pass-verifyCode {
+    width: 90px;
+    height: 40px;
+    background: url(https://passport.baidu.com/passApi/img/loading_16.gif) no-repeat center center;
+    border: 1px solid #DDD;
+    float: left;
+    margin-left: 5px
+}
+
+.tang-pass-login .pass-change-verifyCode {
+    padding-left: 12px;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 40px;
+    float: left;
+    cursor: pointer
+}
+
+.tang-pass-login .pass-success-verifyCode {
+    display: none;
+    height: 16px;
+    width: 16px;
+    background: url(https://passport.baidu.com/passApi/img/right_16.png) 0 0 no-repeat;
+    position: absolute;
+    left: 120px;
+    top: 14px;
+    z-index: 1999
+}
+
+.tang-pass-login .pass-form-item .pass-placeholder {
+    position: absolute;
+    overflow: hidden;
+    z-index: 1999;
+    display: block;
+    top: 9px;
+    left: 0;
+    height: 28px;
+    line-height: 28px;
+    _line-height: 30px;
+    width: 140px;
+    padding-left: 13px;
+    font-size: 12px;
+    color: #ccc;
+    cursor: text
+}
+
+.tang-pass-login .pass-form-item .pass-placeholder-verifyCode {
+    width: 130px;
+    left: 0
+}
+
+.tang-pass-login .pass-form-item .pass-clearbtn {
+    position: absolute;
+    z-index: 20;
+    top: 14px;
+    right: 6px;
+    height: 16px;
+    width: 16px;
+    background: url(https://passport.baidu.com/passApi/img/pass_login_icons.png) no-repeat 0 0;
+    cursor: pointer
+}
+
+.tang-pass-login .pass-form-item span.pass-clearbtn-verifyCode {
+    left: 125px;
+    z-index: 1999
+}
+
+.tang-pass-login .pass-form-item span.pass-clearbtn-smsVerifyCode {
+    right: inherit;
+    left: 160px
+}
+
+.tang-pass-login .pass-form-item .pass-clearbtn:hover {
+    background-position: 0 -16px
+}
+
+.tang-pass-login .pass-form-item-memberPass {
+    margin-bottom: 10px;
+    display: inline-block
+}
+
+.tang-pass-login .pass-form-item-memberPass input {
+    vertical-align: middle
+}
+
+.tang-pass-login .pass-form-item-memberPass label {
+    color: #4a4a4a;
+    margin-left: 5px;
+    font-size: 12px
+}
+
+.tang-pass-login .pass-form-item-submit {
+    position: relative
+}
+
+.tang-pass-login .pass-form-item-submit input {
+    width: 302px;
+    height: 40px;
+    line-height: 40px;
+    background: #2e82ff;
+    border-radius: 2px
+}
+
+.tang-pass-login .pass-form-item-submit input:hover {
+    background: #4490f7
+}
+
+.tang-pass-login .pass-form-item-submit input:focus {
+    background: #3a84e8
+}
+
+.tang-pass-login .pass-form-item-submit .pass-button-submit {
+    font-size: 14px;
+    font-weight: 800;
+    border: 0;
+    color: #fff;
+    cursor: pointer
+}
+
+a.pass-reglink {
+    position: absolute;
+    right: 26px;
+    color: #2e82ff;
+    top: 0
+}
+
+.pass-link:hover {
+    filter: Alpha(opacity=60);
+    opacity: .6
+}
+
+.tang-pass-login .pass-form-item-submit .pass-fgtpwd {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 12px
+}
+
+.tang-pass-login-phoenix {
+    padding: 0 0 10px 16px;
+    position: absolute;
+    margin-top: -36px;
+    *margin-top: -40px;
+    *left: 110px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-title {
+    color: #666;
+    line-height: 28px;
+    height: 28px;
+    padding: 2px 0;
+    font-size: 12px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list {
+    clear: both;
+    line-height: 20px;
+    zoom: 1
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list:after {
+    line-height: 20px;
+    content: "\20";
+    display: block;
+    height: 0;
+    clear: both
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .pass-phoenix-btn {
+    float: left
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-list,
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-list li {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-list li {
+    width: 26px
+}
+
+.pass-normal-btn {
+    background-position: -217px -64px
+}
+
+.pass-unamelogin-btn {
+    background-position: -217px -64px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-tsina .phoenix-btn-item {
+    background-position: -55px -33px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-qzone .phoenix-btn-item {
+    background-position: -6px -55px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-tqq .phoenix-btn-item {
+    background-position: -55px -55px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-weixin .phoenix-btn-item {
+    background-position: -30px -30px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-tianyi .phoenix-btn-item {
+    background-position: -30px -55px
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-renren,
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-tqq,
+.tang-pass-login-phoenix .pass-phoenix-list .bd-acc-fetion {
+    display: none
+}
+
+.tang-pass-login-phoenix .pass-phoenix-list .phoenix-btn-item {
+    display: block;
+    margin-right: 15px;
+    color: #00C;
+    text-decoration: underline;
+    padding-left: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    list-style: none;
+    background: url(https://passport.baidu.com/passApi/img/loginv4.png) no-repeat;
+    _background: url(https://passport.baidu.com/passApi/img/loginv4.gif) no-repeat;
+    width: 0;
+    height: 18px;
+    overflow: hidden
+}
+
+.choiceuser-article {
+    padding: 0 20px
+}
+
+.choiceuser-article .choiceuser-msg {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+    line-height: 24px
+}
+
+.choiceuser-article .choiceuser-back {
+    margin-top: 10px;
+    clear: both
+}
+
+.choiceuser-article .choiceuser-back a {
+    display: block;
+    text-align: right;
+    color: #1b66c7;
+    text-decoration: none
+}
+
+.choiceuser-article .choiceuser-btn:after {
+    content: "\20";
+    display: block;
+    height: 0;
+    clear: both
+}
+
+.choiceuser-article .choiceuser-btn {
+    padding-left: 20px;
+    zoom: 1
+}
+
+.choiceuser-article .choiceuser-btn input {
+    display: block;
+    float: left;
+    margin-right: 15px;
+    width: 80px;
+    height: 32px;
+    border-radius: 3px;
+    transition: .3s;
+    border: 0;
+    margin: 10px 10px 0 0;
+    cursor: pointer;
+    color: #666;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    font-weight: 800
+}
+
+.choiceuser-article .choiceuser-btn input:hover {
+    background-color: #eee;
+    border-color: #dadada
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-title {
+    font-size: 16px;
+    text-align: center;
+    line-height: 16px;
+    padding-left: 0
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-title a {
+    font-size: 16px
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-content {
+    padding-top: 24px;
+    height: 180px;
+    overflow: hidden;
+    text-align: center
+}
+
+.tang-pass-qrcode .tang-pass-wltopc-qrcode-content {
+    margin-top: 5px;
+    height: 200px;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    margin-left: -100px
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-content img,
+.tang-pass-qrcode .tang-pass-wltopc-qrcode-content img {
+    width: 138px;
+    height: 138px
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-info {
+    color: #666;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    background: #f1f1f1;
+    display: inline-block;
+    padding: 3px 5px 3px 16px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 2px;
+    margin: 10px 0 0;
+    background: url(https://passport.baidu.com/passApi/img/qrcodetitle.png) no-repeat 0 4px
+}
+
+.tang-pass-qrcode .pass-qrcode-link-back {
+    float: right;
+    cursor: pointer
+}
+
+.tang-pass-qrcode .pass-qrcode-link-back:hover {
+    text-decoration: underline
+}
+
+.tang-pass-qrcode .pass-qrcode-scanSuccess {
+    padding-top: 94px;
+    color: #4ab930;
+    font-size: 18px;
+    line-height: 18px;
+    background: url(https://passport.baidu.com/passApi/img/ok.png) no-repeat center 20px;
+    margin-bottom: 15px
+}
+
+.tang-pass-qrcode .pass-qrcode-successInfo {
+    line-height: 20px;
+    font-size: 12px;
+    color: #666
+}
+
+.tang-pass-sms {
+    display: none;
+    padding: 0 28px
+}
+
+.tang-pass-sms .pass-form-item-submit {
+    margin-bottom: 0
+}
+
+.tang-pass-sms .tang-pass-sms-title {
+    height: 30px;
+    line-height: 30px;
+    color: #666;
+    font-weight: 800
+}
+
+.tang-pass-sms .tang-pass-sms-tip {
+    line-height: 18px;
+    color: #999;
+    font-weight: 400
+}
+
+.tang-pass-sms p.pass-form-item-smsVerifyCode:after,
+.tang-pass-login p.pass-form-item-verifyCode:after {
+    line-height: 20px;
+    content: "\20";
+    display: block;
+    height: 0;
+    clear: both
+}
+
+.tang-pass-sms p.pass-form-item-smsVerifyCode,
+.tang-pass-login p.pass-form-item-verifyCode {
+    position: relative;
+    margin-bottom: 15px;
+    width: 302px;
+    zoom: 1
+}
+
+.tang-pass-sms .pass-form-item .pass-sms-link-back {
+    cursor: pointer;
+    display: block;
+    text-align: right;
+    float: right;
+    margin-right: -3px;
+    padding-top: 10px;
+    *margin-top: -14px
+}
+
+.tang-pass-sms .pass-form-item input.pass-text-input-smsPhone {
+    width: 282px
+}
+
+.tang-pass-sms .pass-form-item input.pass-text-input-smsVerifyCode {
+    width: 168px;
+    float: left
+}
+
+.tang-pass-sms .pass-form-item span.pass-placeholder-smsPhone {
+    padding-left: 22px
+}
+
+.tang-pass-sms .pass-form-item span.pass-placeholder-smsVerifyCode {
+    width: 70px
+}
+
+.tang-pass-sms .pass-form-item span.pass-item-timer,
+.tang-pass-sms .pass-form-item span.pass-item-time-timing {
+    width: 84px
+}
+
+.tang-pass-sms .pass-form-item-smsPhone {
+    z-index: 20
+}
+
+.tang-pass-login .pass-item-timer,
+.tang-pass-login .pass-item-time-timing {
+    display: block;
+    padding: 0;
+    float: left;
+    margin-left: 10px;
+    height: 40px;
+    width: 105px;
+    font-size: 12px;
+    transition: .3s;
+    color: #2e82ff;
+    border: 1px solid #dedede;
+    background-color: #fff;
+    cursor: default;
+    border-radius: 0
+}
+
+.tang-pass-login .pass-item-timer {
+    cursor: pointer
+}
+
+.tang-pass-login .pass-item-time-timing {
+    color: #9b9b9b
+}
+
+.tang-pass-login .pass-suggestion-list {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    z-index: 21;
+    top: 42px;
+    _top: 43px;
+    left: 0;
+    border: 1px solid #dedede;
+    border-top: 0;
+    background: #fff;
+    width: 300px
+}
+
+.tang-pass-login li.pass-item-suggsetion {
+    position: relative;
+    z-index: 2001;
+    line-height: 14px;
+    padding: 5px 0 5px 6px;
+    color: #888;
+    font-family: "å®‹ä½“";
+    font-size: 12px;
+    color: #333;
+    cursor: pointer;
+    word-spacing: break-word;
+    word-break: break-all
+}
+
+.tang-pass-login li.pass-item-suggsetion a {
+    position: absolute;
+    display: none;
+    top: 4px;
+    right: 4px;
+    height: 16px;
+    width: 16px;
+    background: url(https://passport.baidu.com/passApi/img/pass_login_icons.png) no-repeat 0 0
+}
+
+.tang-pass-login li.pass-item-suggsetion_hover a {
+    display: block
+}
+
+.tang-pass-login li.pass-item-suggsetion a:hover {
+    background-position: 0 -16px
+}
+
+.tang-pass-login .pass-item-suggsetion_hover {
+    background-color: #f7f7f7
+}
+
+.tang-pass-sms-agreement {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #969696
+}
+
+.tang-pass-login a.pass-sms-btn {
+    cursor: pointer;
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 50px
+}
+
+.tang-pass-login .pass-form-item-PhoneCountry {
+    z-index: 26
+}
+
+.tang-pass-login .pass-form-item-PhoneCountry .pass-label {
+    background: url(https://passport.baidu.com/passApi/img/account_thaw/country-arrow-down.png) no-repeat right center;
+    cursor: pointer;
+    width: 66px;
+    padding-left: 15px;
+    display: block;
+    position: absolute;
+    top: 8px;
+    left: 0;
+    height: 20px;
+    overflow: hidden;
+    padding: 5px 0 0 12px;
+    z-index: 20
+}
+
+.tang-pass-login .pass-form-item-PhoneCountry .pass-label-code-up {
+    background: url(https://passport.baidu.com/passApi/img/account_thaw/country-arrow-up.png) no-repeat right center
+}
+
+.tang-pass-login .pass-country-list {
+    position: absolute;
+    top: 42px;
+    left: 0;
+    border: 1px solid #dedede;
+    border-top: 0;
+    background: #fff;
+    width: 300px;
+    height: 170px;
+    overflow-y: auto;
+    display: none;
+    visibility: hidden;
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    padding-left: 0
+}
+
+.tang-pass-login .pass-form-item-PhoneCountry input.pass-text-input {
+    padding-left: 87px;
+    width: 205px
+}
+
+.tang-pass-login .pass-form-item-PhoneCountry span.pass-placeholder {
+    left: 87px;
+    width: 109px;
+    padding-left: 0
+}
+
+.tang-pass-login li.pass-item-country {
+    position: relative;
+    line-height: 14px;
+    padding: 10px 0;
+    color: #888;
+    font-family: "å®‹ä½“";
+    font-size: 12px;
+    color: #333;
+    cursor: pointer;
+    word-break: break-all
+}
+
+.tang-pass-login li.pass-item-country-hover {
+    background: #f7f7f7
+}
+
+.tang-pass-login li.pass-item-country span {
+    display: inline-block;
+    width: 74px;
+    padding-left: 12px
+}
+
+.tang-pass-login .pass-foreignMobile-msg {
+    font-weight: 800;
+    color: #666;
+    margin-bottom: 10px;
+    display: none;
+    visibility: hidden
+}
+
+.tang-pass-login .pass-foreignMobile-msg span {
+    font-weight: 400;
+    color: #999;
+    padding-left: 6px
+}
+
+.tang-pass-login .pass-foreignMobile-link-wrapper {
+    position: absolute;
+    right: 26px;
+    margin-top: -26px;
+    font-size: 12px;
+    cursor: pointer
+}
+
+.tang-pass-login .pass-foreignMobile-back-wrapper {
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    right: 26px;
+    margin-top: -26px;
+    font-size: 12px;
+    cursor: pointer
+}
+
+.tang-pass-login .pass-foreignMobile-back,
+.tang-pass-login .pass-foreignMobile-link {
+    font-size: 12px
+}
+
+.choiceuser-buttons .pass-button {
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box
+}
+
+.choiceuser-buttons .pass-button {
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box
+}
+
+.wallet-qrcode-succ {
+    background-color: #fff;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    z-index: 1000;
+    left: 0;
+    top: 0
+}
+
+.wallet-qrcode-succ p {
+    font-family: "Microsoft YaHei";
+    font-weight: 400;
+    font-size: 14px
+}
+
+.tang-pass-wltopc-qrcode-init {
+    float: left
+}
+
+.Qrcode-status-con {
+    width: 138px;
+    height: 138px;
+    border: 1px solid #ecedee;
+    padding: 9px;
+    text-align: center;
+    color: #000;
+    font-size: 14px;
+    display: none;
+    line-height: 20px;
+    margin: 0 auto;
+    -webkit-transition: all .3s liner;
+    -moz-transition: all .3s liner;
+    transition: .3s liner;
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0)
+}
+
+.Qrcode-status-animation {
+    background: url(https://passport.baidu.com/passApi/img/qrcodeLoginGuide.png) no-repeat center;
+    height: 156px;
+    width: 125px;
+    position: absolute;
+    top: 0;
+    *top: 72px;
+    left: 150px;
+    *left: 200px;
+    display: none
+}
+
+.Qrcode-status-animation-hackIE8 {
+    left: 200px;
+    top: 72px
+}
+
+.tang-pass-qrcode .tang-pass-qrcode-imgWrapper {
+    display: block
+}
+
+.Qrcode-status-con .Qrcode-status-icon {
+    width: 36px;
+    height: 36px;
+    margin: 25px auto 15px
+}
+
+.Qrcode-status-success .Qrcode-status-icon {
+    background: url(https://passport.baidu.com/passApi/img/qrcode-success.png) no-repeat center
+}
+
+.Qrcode-status-error .Qrcode-status-icon {
+    background: url(https://passport.baidu.com/passApi/img/qrcode-error.png) no-repeat center;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAIAAABuYg/PAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo3QTgzRTg5MDE0MjA2ODExOEMxNENCQzgyQTdDMDY3RiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4Qzg3MzE3RTU1N0UxMUU3QjgzNkRBQUY0NjVDRTlCNiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4Qzg3MzE3RDU1N0UxMUU3QjgzNkRBQUY0NjVDRTlCNiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QzZDNjBCRjkxNjIwNjgxMThDMTRDQkM4MkE3QzA2N0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0E4M0U4OTAxNDIwNjgxMThDMTRDQkM4MkE3QzA2N0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5wU2dqAAADK0lEQVR42rxX20sUYRw9O62uukJeUEltXR90UdReNNOMIh8lNSzqRVh6Uh9Ki+wPiAgMUqH0JaToScqHtIeoMITwlpSXrl5wXdT1grpFpqu50+/bBjWd+ca12T0s7LD89pyZb37f+c5PJ4oi1OBYRM8wBm2wzWF2Cb9c7McQA2LCYY5GhhnZyTgUoUoDHUfM7Ub7IFo68dEO/i3pdEgzoSQXpzMgCN6L9Y2g9hkm5uEVEqJQVYTMpD2Lrf1GXStae7BvFGajshCBejUx5zKuN+HLJP4TKfG4cwlhRmUxUqpohH0emsAUhYbyf/S23ubqOqofaqZEICoiJFoZsfpWfLZDWxAh0e4Uo95r64UvQLREviXmFln7+Q60hWjLSmLtA8wafAfarGQOklhLF3wNsiEmRr73cUKx6ICAGis6buPKGcWagyFouow3t3A2R7GGDG96EUL3MM/3kmORm8Ikz+chKFC+hgqS4xCgR+kpRR6SICsXhmy8x59cwPdldjE2g9U1+Rqym/UNdjE4waMiIZ21ThyZ5hVFhMISj4Fx6WSRRVwk4iPRN4oNN2+R9HNOlXe7+BNdX1VqphbYh48ZJwTO/WqLFRcE+BECne7+QbABQnSYn8RiwqCnxMLvxu1BIymWnYr0t+BA/FiBY4k1tGpr/EViDPQZiXjVr1JnDMK54yg6CtllGHXgyVu8eM/re0K6GbqpBfFCDc9E8lJxowThoWyDdwyhdwS0W+ixwo04HIUcC06mM8ciyZvNGHMorkpztScWlDdCyUfI7q4Vs6127zle97PDaDcMAbh4AtZ8bIioeiBPlZ6AxgpP65coG6jRgO5vsNbi5Qd5JYJrHY/aUdaA8Vko9TZFSinw0MlWetfriOhVmHx8lYVX9mT0RcnSd6gskmKy5CCUYQsyfaJUkIWspF3pqqoYqSaNlYhw+5ptiQUFsEOZkqVWICoiJFoZMQKl1/tlsMRpoEQkRMWL35utXN/ml8FiE+88I5O3adzkGZmy9j4y7RgGn3bik9owSEhLYDs3f3/D4I4xl3xkwAY7jblOLLskcyH7N0XjiBnHLHsac/8IMAC4AzcrBhyRBQAAAABJRU5ErkJggg==)
+}
+
+.Qrcode-status-refresh .Qrcode-status-icon {
+    margin-top: 15px;
+    background: url(https://passport.baidu.com/passApi/img/qrcode-refresh.png) no-repeat center
+}
+
+.Qrcode-status-msg {
+    font-size: 12px;
+    color: #333
+}
+
+.Qrcode-animation {
+    -webkit-animation: marginLeft .3s linear;
+    -moz-animation: marginLeft .3s linear;
+    animation: marginLeft .3s linear;
+    -webkit-transition: all .3s liner;
+    -moz-transition: all .3s liner;
+    transition: .3s liner;
+    -webkit-transform: translateX(-49px);
+    -moz-transform: translateX(-49px);
+    -ms-transform: translateX(-49px);
+    transform: translateX(-49px)
+}
+
+.Qrcode-animationRight {
+    -webkit-animation: marginRight .3s linear;
+    -moz-animation: marginRight .3s linear;
+    animation: marginRight .3s linear;
+    -webkit-transition: all .3s liner;
+    -moz-transition: all .3s liner;
+    transition: .3s liner;
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0)
+}
+
+@-webkit-keyframes marginLeft {
+    0% {
+        -webkit-transform: translateX(0)
+    }
+
+    100% {
+        -webkit-transform: translateX(-49px)
+    }
+}
+
+@-moz-keyframes marginLeft {
+    0% {
+        -moz-transform: translateX(0)
+    }
+
+    100% {
+        -moz-transform: translateX(-49px)
+    }
+}
+
+@-ms-keyframes marginLeft {
+    0% {
+        -ms-transform: translateX(0)
+    }
+
+    100% {
+        -ms-transform: translateX(-49px)
+    }
+}
+
+@keyframes marginLeft {
+    0% {
+        transform: translateX(0)
+    }
+
+    100% {
+        transform: translateX(-49px)
+    }
+}
+
+@-webkit-keyframes marginRight {
+    0% {
+        -webkit-transform: translateX(-49px)
+    }
+
+    100% {
+        -webkit-transform: translateX(0)
+    }
+}
+
+@-moz-keyframes marginRight {
+    0% {
+        -moz-transform: translateX(-49px)
+    }
+
+    100% {
+        -moz-transform: translateX(0)
+    }
+}
+
+@-ms-keyframes marginRight {
+    0% {
+        -ms-transform: translateX(-49px)
+    }
+
+    100% {
+        -ms-transform: translateX(0)
+    }
+}
+
+@keyframes marginRight {
+    0% {
+        transform: translateX(-49px)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
+}
+
+.Qrcode-status-guideAnim {
+    display: block
+}
+
+.tang-pass-login p.Qrcode-refresh-btn {
+    color: #38f;
+    text-align: center;
+    padding: 8px 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 3px
+}
+
+p.pass-form-logo {
+    background: url(https://passport.baidu.com/passApi/img/loginlogo.png) no-repeat left;
+    background: url(https://passport.baidu.com/passApi/img/loginlogo.gif) no-repeat left;
+    font-size: 16px;
+    height: 32px;
+    line-height: 46px;
+    padding-left: 118px;
+    color: #000;
+    margin-top: 25px;
+    margin-bottom: 15px
+}
+
+.tang-pass-qrcode p.pass-form-logo {
+    margin-left: 28px
+}
+
+.tang-pass-qrcode-ullist {
+    display: block;
+    padding-top: 16px;
+    margin-left: 36px;
+    padding-left: 0;
+    overflow: hidden
+}
+
+li.tang-pass-qrcode-list {
+    color: #999;
+    font-size: 12px;
+    float: left;
+    margin-left: 24px;
+    width: 72px
+}
+
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-aq,
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-gx,
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-bj {
+    width: 12px;
+    height: 18px;
+    display: inline-block;
+    position: relative;
+    top: 6px;
+    margin-right: 8px;
+    background: url(https://passport.baidu.com/passApi/img/loginv4.png) no-repeat;
+    _background: url(https://passport.baidu.com/passApi/img/loginv4.gif) no-repeat
+}
+
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-aq {
+    background-position: -9px -3px
+}
+
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-gx {
+    background-position: -29px -3px
+}
+
+.tang-pass-qrcode-list span.tang-pass-qrcode-list-bj {
+    background-position: -51px -3px
+}
+
+.tang-pass-footerBar {
+    color: #2e82ff;
+    margin-top: 40px;
+    height: 60px;
+    line-height: 60px;
+    background: #f0f6ff;
+    padding: 0 28px;
+    position: relative
+}
+
+.tang-pass-footerBar a,
+.tang-pass-footerBar a:hover {
+    text-decoration: none;
+    font-size: 14px;
+    width: 80px;
+    text-align: right
+}
+
+.tang-pass-footerBarPhoenix {
+    color: #2e82ff;
+    display: inline-block
+}
+
+.tang-pass-footerBarPhoenixSplit {
+    width: 1px;
+    background: #3582f8;
+    height: 8px;
+    margin-right: 16px;
+    display: inline-block;
+    *margin-top: -37px;
+    *margin-left: 90px
+}
+
+.tang-pass-footerBarQrcode,
+.tang-pass-footerBarULogin {
+    display: inline-block;
+    width: 80px;
+    text-align: left;
+    margin: 0;
+    font-size: 14px;
+    cursor: pointer
+}
