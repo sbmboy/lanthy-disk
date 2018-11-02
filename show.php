@@ -7,6 +7,7 @@ require_once 'config.php';
 if(isset($_GET['id'])&&$_GET['id']>0){
     $id=$_GET['id'];
     $trash=false;
+    $rowids = array();
     // 获取列表，默认列表
     $lists=$lanthy->getCategories($id);
     $totalSize = $lanthy->getFileSize(1);
@@ -14,6 +15,18 @@ if(isset($_GET['id'])&&$_GET['id']>0){
     if(isset($_GET['action'])){
         $action=$_GET['action'];
         switch ($action) {
+            case 'checked':
+                // 多选
+                if(isset($_GET['allcheck'])&&$_GET['allcheck']){
+                    // 全选
+                    $tmp=$lanthy->getRowids($_GET['id']);
+                    foreach($tmp as $v) $rowids[]=$v['rowid'];
+                    header("location:/show.php?id=".intval($_GET['id'])."&action=checked&rowid=".implode(',',$rowids));
+                }else{
+                    $rowids = explode(',',$_GET['rowid']);
+                    $rowids = array_unique($rowids);
+                }
+                break;
             case 'logout':
                 // 退出
                 if(isset($_SESSION['loginStatus'])){
@@ -98,8 +111,9 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                     $db->exec("begin exclusive transaction");
                     // 先获取文件相关信息
-                    $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($_GET['rowid']);
+                    $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($_GET['rowid'])." AND info_father=".intval($_GET['id']);
                     $view = $db->querySingle($sql,true);
+                    if(!$view) header("location:/show.php?id=".intval($_GET['id']));
                     // 关闭数据库
                     $db->exec("end transaction");
                     $db->close();
@@ -205,12 +219,25 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 // 删除,只是到回收站
                 $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                 $db->exec("begin exclusive transaction");
-                // 删除该目录
-                $sql = "UPDATE hl_info SET info_status='trash' WHERE rowid=".intval($_GET['rowid']); // 更新根目录大小
-                $db->exec($sql);
-                // 还需要删除该目录下面的文件和文件夹
-                $sql = "UPDATE hl_info SET info_status='trash' WHERE info_father=".intval($_GET['rowid']); // 更新根目录大小
-                $db->exec($sql);
+                if(strpos($_GET['rowid'],',')){
+                    // 批量
+                    $rowids = explode(',',$_GET['rowid']);
+                    foreach($rowids as $id){
+                        // 删除内容
+                        $sql = "UPDATE hl_info SET info_status='trash' WHERE rowid=".intval($id); // 更新根目录大小
+                        $db->exec($sql);
+                        // 还需要删除该目录下面的文件和文件夹
+                        $sql = "UPDATE hl_info SET info_status='trash' WHERE info_father=".intval($id); // 更新根目录大小
+                        $db->exec($sql);
+                    }
+                } else{
+                    // 删除内容
+                    $sql = "UPDATE hl_info SET info_status='trash' WHERE rowid=".intval($_GET['rowid']); // 更新根目录大小
+                    $db->exec($sql);
+                    // 还需要删除该目录下面的文件和文件夹
+                    $sql = "UPDATE hl_info SET info_status='trash' WHERE info_father=".intval($_GET['rowid']); // 更新根目录大小
+                    $db->exec($sql);
+                }
                 // 关闭数据库
                 $db->exec("end transaction");
                 $db->close();
@@ -404,7 +431,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                 <!-- 侧边栏 -->
 
                                 <!-- 回收站 -->
-                                <ul class="JKEQDvb<?php if($_GET['filetype']=='trash') echo ' ntrOqeO';?>">
+                                <ul class="JKEQDvb<?php if($action=='trash') echo ' ntrOqeO';?>">
                                     <div class="elObjO">
                                         <a class="g-button" href="show.php?id=1&action=trash" title="回收站">
                                             <span class="g-button-right">
@@ -445,6 +472,10 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                         <div class="X552xQ">
                             <div class="DxdbeCb g-clearfix">
                                 <div class="je06M2">
+                                    <div class="dbme3nXk by06wJ">
+                                        <?php if($action=='grid'){?><a class="ehnNwVP" href="?id=<?=$id?>"><span class="icon icon-list"></span></a>
+                                        <?php }else{ ?><a class="sbtNVZy" href="?id=<?=$id?>&action=grid"><span class="icon icon-grid"></span></a><?php } ?>
+                                    </div>
                                     <!--搜索框-->
                                     <div class="OFaPaO">
                                         <div class="bkN5ee">
@@ -461,7 +492,6 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                         </div>
                                     </div>
                                     <!--//搜索框-->
-
 
                                     <div class="htmrOvxW" style="white-space: nowrap; position: relative;">
                                         <div class="tcuLAu" style="position: absolute; top: 0px; line-height: normal; padding-top: 11px; padding-left: 0px; width: auto; visibility: visible;">
@@ -485,6 +515,25 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                 </span>
                                             </a>
                                             <!--//新建文件夹-->
+                                            <?php if($rowids): ?>
+                                            <!-- 批量下载 -->
+                                            <a class="g-button" href="?id=<?=$id?>&action=download&rowid=<?=$_GET['rowid']?>" title="批量下载" style="display: inline-block;">
+                                                <span class="g-button-right">
+                                                    <em class="icon icon-download" title="批量下载"></em>
+                                                    <span class="text" style="width: auto;">批量下载</span>
+                                                </span>
+                                            </a>
+                                            <!-- //批量下载 -->
+
+                                            <!-- 批量删除 -->
+                                            <a class="g-button" href="?id=<?=$id?>&action=delete&rowid=<?=$_GET['rowid']?>" title="批量删除" style="display: inline-block;">
+                                                <span class="g-button-right">
+                                                    <em class="icon icon-delete" title="批量删除"></em>
+                                                    <span class="text" style="width: auto;">批量删除</span>
+                                                </span>
+                                            </a>
+                                            <!-- //批量删除 -->
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -525,10 +574,29 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                         <div class="QxJxtg">
                                             <div class="xGLMIab">
                                                 <ul class="QAfdwP tvPMvPb">
-                                                    <li class="fufHyA yfHIsP" style="width:60%;">
-                                                        <div class="Qxyfvg fydGNC"></div>
-                                                        <span class="text">文件名</span>
-                                                    </li>
+                                                    <?php if($rowids){ ?>
+                                                        <li class="fufHyA yfHIsP EzubGg" style="width:60%;">
+                                                            <div class="Qxyfvg fydGNC">
+                                                                <a href="?id=<?=$id?>">
+                                                                    <span class="zbyDdwb"></span>
+                                                                    <span class="MIMvNNb">全选</span>
+                                                                    <span class="icon NbKJexb icon-checksmall"></span>
+                                                                </a>
+                                                            </div>
+                                                            <span class="text">文件名</span>
+                                                        </li>
+                                                    <?php }else{ ?>
+                                                        <li class="fufHyA yfHIsP" style="width:60%;">
+                                                            <div class="Qxyfvg fydGNC">
+                                                                <a href="?id=<?=$id?>&action=checked&allcheck=true">
+                                                                    <span class="zbyDdwb"></span>
+                                                                    <span class="MIMvNNb">全选</span>
+                                                                    <span class="icon NbKJexb icon-checksmall"></span>
+                                                                </a>
+                                                            </div>
+                                                            <span class="text">文件名</span>
+                                                        </li>
+                                                    <?php } ?>
                                                     <li class="fufHyA" style="width:10%;">
                                                         <span class="text">大小</span>
                                                     </li>
@@ -610,6 +678,37 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                     <?php endif; ?>
                                                     <!--//重命名-->
 
+                                                    <?php if($action=='upload'):?>
+                                                    <!--上传-->
+                                                    <dd class="g-clearfix AuPKyz open-enable">
+                                                        <div class="rkua3EGO default-small"></div>
+                                                        <div class="file-name" style="width:60%">
+                                                            <div class="text">
+                                                                <div class="ExFGye" style="position: inherit; display: block; padding-left:0; margin-left:0;">
+                                                                    <div class="ufm31ML">
+                                                                        <form id="uploadform" method="post" enctype="multipart/form-data">
+                                                                            <input class="GadHyA" name="files[]" type="file" multiple>
+                                                                            <span class="amppO4EQ" id="upload">
+                                                                                <em class="icon wvOvbW" style="text-indent: 0;"></em>
+                                                                                <em class="icon btOyBY" style="text-indent: 0;"></em>
+                                                                            </span>
+                                                                            <span class="zfnxOk1p">
+                                                                                <a href="?id=<?=$id?>">
+                                                                                    <em class="icon wvOvbW" style="text-indent: 0;"></em>
+                                                                                    <em class="icon nu3n9k" style="text-indent: 0;"></em>
+                                                                                </a>
+                                                                            </span>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="vpmt3Wea" style="width:16%">-</div>
+                                                        <div class="klpg024G" style="width:23%">-</div>
+                                                    </dd>
+                                                    <!--//上传-->
+                                                    <?php endif; ?>
+
 
                                                     <?php
                                                     /**
@@ -617,9 +716,24 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                      */
                                                     foreach($lists as $list):
                                                         if($list['info_filetype']=='category') $isCategory = true; else $isCategory = false;
+                                                        $tmp=$rowids;
                                                     ?>
                                                     <!--列表循环-->
-                                                    <dd class="g-clearfix AuPKyz open-enable">
+                                                    <dd class="g-clearfix AuPKyz open-enable <?=in_array($list['rowid'],$tmp)?'mjOzZO':''?>">
+                                                        <?php if(!$isCategory):?>
+                                                            <a href="?id=<?=$id?>&action=checked&rowid=<?php
+                                                                if(in_array($list['rowid'],$tmp)){
+                                                                    $tmp = array_merge(array_diff($tmp, array($list['rowid'])));
+                                                                }else{
+                                                                    $tmp[]=$list['rowid'];
+                                                                }
+                                                                echo implode(',',$tmp);
+                                                            ?>">
+                                                                <span class="EOGexf">
+                                                                        <span class="icon NbKJexb"></span>
+                                                                </span>
+                                                            </a>
+                                                        <?php endif; ?>
                                                         <div class="rkua3EGO <?=$icons[$list['info_filetype']]?>"></div>
                                                         <div class="file-name" style="width:60%">
                                                             <div class="text">
@@ -675,36 +789,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                     <?php endforeach; ?>
 
 
-                                                    <?php if($action=='upload'):?>
-                                                    <!--上传-->
-                                                    <dd class="g-clearfix AuPKyz open-enable">
-                                                        <div class="rkua3EGO default-small"></div>
-                                                        <div class="file-name" style="width:60%">
-                                                            <div class="text">
-                                                                <div class="ExFGye" style="position: inherit; display: block; padding-left:0; margin-left:0;">
-                                                                    <div class="ufm31ML">
-                                                                        <form id="uploadform" method="post" enctype="multipart/form-data">
-                                                                            <input class="GadHyA" name="files[]" type="file" multiple>
-                                                                            <span class="amppO4EQ" id="upload">
-                                                                                <em class="icon wvOvbW" style="text-indent: 0;"></em>
-                                                                                <em class="icon btOyBY" style="text-indent: 0;"></em>
-                                                                            </span>
-                                                                            <span class="zfnxOk1p">
-                                                                                <a href="?id=<?=$id?>">
-                                                                                    <em class="icon wvOvbW" style="text-indent: 0;"></em>
-                                                                                    <em class="icon nu3n9k" style="text-indent: 0;"></em>
-                                                                                </a>
-                                                                            </span>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="vpmt3Wea" style="width:16%">-</div>
-                                                        <div class="klpg024G" style="width:23%">-</div>
-                                                    </dd>
-                                                    <!--//上传-->
-                                                    <?php endif; ?>
+                                                    
 
                                                 </div>
                                             </div>
@@ -853,6 +938,22 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                             <?php }else{
                                 echo '暂不支持此格式文件的预览，请下载后查看';
                             }?>
+                        </div>
+                        <div node-type="img-nav" class="img-nav">
+                            <div class="img-nav-left" style="display:inline;"> 
+                                <a href="?id=<?=$id?>&action=priview&rowid=<?=($_GET['rowid']-1)?>">
+                                    <span class="pre-arrow">
+                                        <em class="pre-arrow-content icon icon-picpre-before"></em>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="img-nav-right" style="display:inline;">
+                                <a href="?id=<?=$id?>&action=priview&rowid=<?=($_GET['rowid']+1)?>">
+                                    <span node-type="next-arrow" class="next-arrow">
+                                        <em class="next-arrow-content icon icon-picpre-next"></em>
+                                    </span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

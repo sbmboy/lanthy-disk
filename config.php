@@ -128,6 +128,14 @@ class LANTHY{
         $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_filetype LIKE '%".$this->db->escapeString($type)."%' ORDER BY info_posttime DESC";
 		return $this->getData($sql);
     }
+    /**
+     * getRowids
+     */
+    function getRowids($id){
+        $sql="SELECT rowid FROM hl_info WHERE info_filetype != 'category' AND info_father=".intval($id);
+		return $this->getData($sql);
+    }
+    
 }
 // 格式时间
 function format_date($time){
