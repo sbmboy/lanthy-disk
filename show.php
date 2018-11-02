@@ -404,7 +404,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                 <!-- 侧边栏 -->
 
                                 <!-- 回收站 -->
-                                <ul class="JKEQDvb">
+                                <ul class="JKEQDvb<?php if($_GET['filetype']=='trash') echo ' ntrOqeO';?>">
                                     <div class="elObjO">
                                         <a class="g-button" href="show.php?id=1&action=trash" title="回收站">
                                             <span class="g-button-right">
