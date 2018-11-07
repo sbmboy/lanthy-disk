@@ -54,15 +54,27 @@ class LANTHY{
     }
     /**
      * getCategories
+     * 获取当前分类下面的文件夹
      */
     function getCategories($id=0){
-        $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_father = ".intval($id)." ORDER BY info_posttime DESC";
+        $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_filetype='category' AND info_father = ".intval($id);
 		return $this->getData($sql);
     }
+
+    /**
+     * getLists 
+     * 获取列表
+     */
+    function getLists($id=0){
+        $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_father = ".intval($id);
+		return $this->getData($sql);
+    }
+
     /**
      * getSearch
      */
     function getSearch($q,$id){
+        $count=20;
         $ids="";
         preg_match_all('/./u', $q, $tags);
 		$tags=$tags[0];
@@ -70,28 +82,23 @@ class LANTHY{
 		foreach($tags as $tag){
 			$tag=trim($tag);
 			if($tag){
-				$tempid=explode(",",$this->getLine("select index_ids from hl_index where index_title='".$this->db->escapeString($tag)."'",false));
+                $tempid=explode(",",$this->getLine("select index_ids from hl_index where index_title='".$this->db->escapeString($tag)."'",false));
 				if(!empty($tempid)){
-					foreach($tempid as $v)if($v)$allid[$v]=1;
-					if(count($allid)>$count)break;
+                    foreach($tempid as $v){
+                        if(isset($allid[$v])) $allid[$v]+=1; else $allid[$v]=1;
+                    }
 				}
 			}
-		}
-		$allid=array_keys($allid);
-		$countID=count($allid);
-		if($countID==0)return array();
-		if($countID>$count){
-			shuffle($allid);
-			$allid=array_slice($allid,0,$count);
-		}
-		/*modified by sorata 2014.11.13*/
-		$tmps=$this->getData("SELECT rowid,* FROM hl_info WHERE info_status='publish' AND rowid IN (".implode(",",$allid).")");
-		$newarray=array();
-		foreach($tmps as $post){
-			$newarray[array_search($post['rowid'],$allid)]=$post;
-		}
-		ksort($newarray);
-		return $newarray;
+        }
+        // 相关度排序
+        arsort($allid);
+        $result = array();
+        foreach($allid as $k=>$v){
+            $sql = "SELECT rowid,* FROM hl_info WHERE info_status='publish' AND rowid =".intval($k);
+            $result[] = $this->getLine($sql);
+            if(count($result)>20) break;
+        }
+        return $result;
     }
     /**
      * getTrash
@@ -171,25 +178,64 @@ function format_size($size){
 function downloadFile($data){
     set_time_limit(0);
     ini_set('max_execution_time', '0');
-    ob_clean();
-    //通过header()发送头信息
-    header('Content-type: '.$data['info_filetype']);
-    header('Accept-Ranges: bytes');
-    header('Accept-Length: '.$data['info_filesize']);
-    header('Content-Disposition: attachment; filename="'.$data['info_title'].'"');
-    //针对大文件，规定每次读取文件的字节数为4096字节，直接输出数据
-    $read_buffer=4096;
-    $handle=fopen($data['info_path'], 'r');
-    //总的缓冲的字节数
-    $sum_buffer=0;
-    //只要没到文件尾，就一直读取
-    while(!feof($handle) && $sum_buffer<$data['info_filesize']) {
-        echo fread($handle,$read_buffer);
-        $sum_buffer+=$read_buffer;
+    if(count($data)>1){
+        $filename = "downloads.zip";
+        $zip = new ZipArchive();
+        if ($zip->open($filename, ZIPARCHIVE::CREATE)==TRUE) {
+            foreach($data as $tmp){
+                if(file_exists($tmp['info_path'])){
+                    $zip->addFile($tmp['info_path'], $tmp['info_title']);
+                }
+            }
+        }
+        $zip->close();    
+        header("Content-Type: application/x-zip-compressed"); //zip格式的
+        header('Accept-Ranges: bytes');
+        header('Content-Length: '. filesize($filename)); //告诉浏览器，文件大小
+        header('Content-disposition: attachment; filename='.$filename); //文件名
+        //针对大文件，规定每次读取文件的字节数为4096字节，直接输出数据
+        $read_buffer=4096;
+        $handle=fopen($data['info_path'], 'r');
+        //总的缓冲的字节数
+        $sum_buffer=0;
+        //只要没到文件尾，就一直读取
+        while(!feof($handle) && $sum_buffer<filesize($filename)) {
+            echo fread($handle,$read_buffer);
+            $sum_buffer+=$read_buffer;
+        }
+        //关闭句柄
+        fclose($handle);
+        exit;
+
+
+        // header("Cache-Control: public");
+        // header("Content-Description: File Transfer");
+        // header('Content-disposition: attachment; filename='.$filename); //文件名
+        
+        // header("Content-Transfer-Encoding: binary"); //告诉浏览器，这是二进制文件
+        // header('Content-Length: '. filesize($filename)); //告诉浏览器，文件大小
+        // @readfile($filename);
+    }else{
+        //通过header()发送头信息
+        header('Content-type: '.$data['info_filetype']);
+        header('Accept-Ranges: bytes');
+        header('Accept-Length: '.$data['info_filesize']);
+        header('Content-Disposition: attachment; filename="'.$data['info_title'].'"');
+        //针对大文件，规定每次读取文件的字节数为4096字节，直接输出数据
+        $read_buffer=4096;
+        $handle=fopen($data['info_path'], 'r');
+        //总的缓冲的字节数
+        $sum_buffer=0;
+        //只要没到文件尾，就一直读取
+        while(!feof($handle) && $sum_buffer<$data['info_filesize']) {
+            echo fread($handle,$read_buffer);
+            $sum_buffer+=$read_buffer;
+        }
+        //关闭句柄
+        fclose($handle);
+        exit;
     }
-    //关闭句柄
-    fclose($handle);
-    exit;
+    return ;
  }
  /**
   * updateIndex();

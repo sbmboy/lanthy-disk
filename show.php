@@ -9,12 +9,41 @@ if(isset($_GET['id'])&&$_GET['id']>0){
     $trash=false;
     $rowids = array();
     // 获取列表，默认列表
-    $lists=$lanthy->getCategories($id);
+    $lists=$lanthy->getLists($id);
     $totalSize = $lanthy->getFileSize(1);
     
     if(isset($_GET['action'])){
         $action=$_GET['action'];
         switch ($action) {
+            case 'move':
+                // 批量移动
+                if(isset($_POST['info_rowid'])&&$_POST['info_rowid']>0){
+                    $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+                    $db->exec("begin exclusive transaction");
+                    // 获取目录的信息
+                    $sql = "SELECT info_path FROM hl_info WHERE rowid=".intval($_POST['info_rowid']);
+                    $father_path = $db->querySingle($sql);
+                    $rowids = explode(',',$_GET['rowid']);
+                    foreach($rowids as $rowid){
+                        //获取文件路径信息
+                        $sql = "SELECT info_title,info_path FROM hl_info WHERE rowid=".intval($rowid);
+                        $info = $db->querySingle($sql,true);
+                        $new_path = $father_path.'/'.base64_encode($info['info_title']);
+                        if(rename($info['info_path'],$new_path)){
+                            $sql = "UPDATE hl_info SET info_path={$new_path},info_father=".intval($_POST['info_rowid'])." WHERE rowid=".intval($rowid);
+                            $db->exec($sql);
+                        }
+                    }
+                    // 关闭数据库
+                    $db->exec("end transaction");
+                    $db->close();
+                    header("location:/show.php?id=".intval($_GET['id']));
+                }else{
+                    $categories = $lanthy->getCategories($_GET['id']);
+                    $rowids = explode(',',$_GET['rowid']);
+                    $rowids = array_unique($rowids);
+                }
+                break;
             case 'checked':
                 // 多选
                 if(isset($_GET['allcheck'])&&$_GET['allcheck']){
@@ -139,20 +168,29 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 $info=array();
                 $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                 $db->exec("begin exclusive transaction");
+                $rowids = explode(',',$_GET['rowid']);
+                // var_dump($rowids);
+                // exit;
+                foreach($rowids as $rowid){
+                    // 先获取文件相关信息
+                    $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($rowid);
+                    $info[] = $db->querySingle($sql,true);
+                }
+                
                 // 先获取文件相关信息
-                $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($_GET['rowid']);
-                $info = $db->querySingle($sql,true);
+                // $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($_GET['rowid']);
+                // $info = $db->querySingle($sql,true);
                 // 关闭数据库
                 $db->exec("end transaction");
                 $db->close();
+                // var_dump($info);
+                // exit;
                 // 下载资源
                 downloadFile($info);
                 header("location:/show.php?id=".intval($_GET['id']));
                 break;
             case 'rename':
                 // 重命名
-                // var_dump($_POST);
-                // exit;
                 if(isset($_POST['info_title'])&&$_POST['info_title']!=''){
                     $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                     $db->exec("begin exclusive transaction");
@@ -533,6 +571,16 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                 </span>
                                             </a>
                                             <!-- //批量删除 -->
+
+                                            <!-- 批量移动 -->
+                                            <a class="g-button" href="?id=<?=$id?>&action=move&rowid=<?=$_GET['rowid']?>" title="批量移动" style="display: inline-block;">
+                                                <span class="g-button-right">
+                                                    <em class="icon icon-recovery" title="批量移动"></em>
+                                                    <span class="text" style="width: auto;">批量移动</span>
+                                                </span>
+                                            </a>
+                                            <!-- //批量移动 -->
+
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -750,27 +798,27 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                                     </a>
                                                                     <?php }else{ ?>
                                                                         <?php if(!$isCategory):?>
-                                                                        <a class="g-button" href="?id=<?=$id?>&action=priview&rowid=<?=$list['rowid']?>" title="预览" style="display: inline-block;">
+                                                                        <a class="g-button" href="?id=<?=$list['info_father']?>&action=priview&rowid=<?=$list['rowid']?>" title="预览" style="display: inline-block;">
                                                                             <span class="g-button-right">
                                                                                 <em class="icon icon-picpre-enlarge" title="预览"></em>
                                                                                 <span class="text">预览</span>
                                                                             </span>
                                                                         </a>
-                                                                        <a class="g-button" href="?id=<?=$id?>&action=download&rowid=<?=$list['rowid']?>" title="下载" style="display: inline-block;">
+                                                                        <a class="g-button" href="?id=<?=$list['info_father']?>&action=download&rowid=<?=$list['rowid']?>" title="下载" style="display: inline-block;">
                                                                             <span class="g-button-right">
                                                                                 <em class="icon icon-download" title="下载"></em>
                                                                                 <span class="text">下载</span>
                                                                             </span>
                                                                         </a>
                                                                         <?php endif; ?>
-                                                                        <a class="g-button" href="?id=<?=$id?>&action=rename&rowid=<?=$list['rowid']?>&title=<?=$list['info_title']?>" title="重命名"
+                                                                        <a class="g-button" href="?id=<?=$list['info_father']?>&action=rename&rowid=<?=$list['rowid']?>&title=<?=$list['info_title']?>" title="重命名"
                                                                         style="display: inline-block;">
                                                                         <span class="g-button-right">
                                                                             <em class="icon icon-edit" title="重命名"></em>
                                                                             <span class="text">重命名</span>
                                                                         </span>
                                                                         </a>
-                                                                        <a class="g-button" href="?id=<?=$id?>&action=delete&rowid=<?=$list['rowid']?>" title="删除"
+                                                                        <a class="g-button" href="?id=<?=$list['info_father']?>&action=delete&rowid=<?=$list['rowid']?>" title="删除"
                                                                             style="display: inline-block;">
                                                                             <span class="g-button-right">
                                                                                 <em class="icon icon-delete" title="删除"></em>
@@ -1131,7 +1179,62 @@ if(isset($_GET['id'])&&$_GET['id']>0){
         pass_w=(pass_w-560)/2;
         document.getElementById('newoffline-dialog').style.left = pass_w + "px";
     </script>
-    <!-- // 修改密码 -->
+    <!-- // 添加新用户 -->
+    <?php endif; ?>
+
+    <?php if($action=='move'):?>
+    <!-- 批量移动 -->
+    <link rel="stylesheet" type="text/css" href="/box-static/function-widget-1/pkg/offlineDownload-all_c812dee.css">
+    <div class="dialog dialog-newoffline-dialog dialog-gray" id="newoffline-dialog" style="width: 560px; top: 115px; bottom: auto; left: 680px; right: auto; display: block; visibility: visible; z-index: 54;">
+        <div class="dialog-header dialog-drag">
+            <h3><span class="dialog-header-title"><em class="select-text">批量移动</em></span></h3>
+            <div class="dialog-control"><a href="?id=<?=$id?>"><span class="dialog-icon dialog-close icon icon-close"><span class="sicon">×</span></span></a></div>
+        </div>
+        <div class="dialog-body">
+            <div class="dlg-bd g-clearfix">
+                <div class="tab-content-mail">
+                    <form method="post" id="moveform">
+                        <dl class="form-flds g-clearfix"><dt>选择文件夹：</dt>
+                            <dd class="g-clearfix">
+                                <div class="b-input b-fl b-share-n">
+                                    <select name="info_rowid" id="share-offline-link" class="share-n">
+                                        <?php
+                                            foreach($categories as $category){
+                                                echo "<option value=\"{$category['rowid']}\">{$category['info_title']}</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                    <label class="input-placeholder">密码默认为123456，设置后用户可自行修改</label>
+                                </div>
+                            </dd>
+                        </dl>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-footer g-clearfix">
+            <a class="g-button g-button-gray" href="?id=<?=$id?>" title="关闭" style="float: right; padding-left: 36px; margin: 0px 14px 0px 5px;">
+                <span class="g-button-right" style="padding-right: 36px;">
+                    <span class="text" style="width: auto;">关闭</span>
+                </span>
+            </a>
+            <a class="g-button g-button-blue" href="javascript:;" onclick="moveSubmit()" title="确定" style="float: right; padding-left: 36px; margin: 0px 5px;">
+                <span class="g-button-right" style="padding-right: 36px;">
+                    <span class="text" style="width: auto;">确定</span>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="module-canvas" style="position: fixed;left: 0px;top: 0px;z-index: 50;background: rgb(0, 0, 0);opacity: 0.5;width: 100%;height: 100%;"></div>
+    <script>
+        function moveSubmit(){
+            document.getElementById('moveform').submit()
+        }
+        var pass_w = document.documentElement.clientWidth || document.body.clientWidth;
+        pass_w=(pass_w-560)/2;
+        document.getElementById('newoffline-dialog').style.left = pass_w + "px";
+    </script>
+    <!-- // 批量移动 -->
     <?php endif; ?>
 
 
