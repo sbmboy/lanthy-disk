@@ -1,11 +1,16 @@
 <?php
 /**
  * 配置文件
+ * PHP目录 : /usr/local/php/
  * upload_max_filesize = 4096M;
+ * max_file_uploads = 200
  * post_max_size = 4096M;
  * max_execution_time = 600
  * max_input_time = 600
  * memory_limit = 2048M
+ * 
+ * Nginx: client_max_body_size = 5000 M
+ * Nginx 目录: /usr/local/nginx/
  * 
  */
 session_start();
@@ -142,6 +147,20 @@ class LANTHY{
         $sql="SELECT rowid FROM hl_info WHERE info_filetype != 'category' AND info_father=".intval($id);
 		return $this->getData($sql);
     }
+    /**
+     * getPreId
+     */
+    function getPreId($id,$rowid){
+        $sql="SELECT rowid FROM hl_info WHERE info_status = 'publish' AND info_filetype != 'category' AND info_father=".intval($id) . " AND rowid < ".intval($rowid)." ORDER BY rowid DESC";
+		return $this->getLine($sql,false);
+    }
+    /**
+     * getNextId
+     */
+    function getNextId($id,$rowid){
+        $sql="SELECT rowid FROM hl_info WHERE info_status = 'publish' AND info_filetype != 'category' AND info_father=".intval($id) . " AND rowid > ".intval($rowid);
+		return $this->getLine($sql,false);
+    }
     
 }
 // 格式时间
@@ -179,60 +198,30 @@ function downloadFile($data){
     set_time_limit(0);
     ini_set('max_execution_time', '0');
     if(count($data)>1){
-        $filename = "downloads.zip";
+        // 多文件下载
+        if(file_exists('download.zip')) unlink('download.zip');
+        $zipname = 'download.zip';
         $zip = new ZipArchive();
-        if ($zip->open($filename, ZIPARCHIVE::CREATE)==TRUE) {
+        $res = $zip->open($zipname, ZipArchive::CREATE);
+        if ($res === TRUE) {
             foreach($data as $tmp){
-                if(file_exists($tmp['info_path'])){
-                    $zip->addFile($tmp['info_path'], $tmp['info_title']);
-                }
+                $zip->addFile($tmp['info_path'], $tmp['info_title']);
             }
         }
-        $zip->close();    
-        header("Content-Type: application/x-zip-compressed"); //zip格式的
-        header('Accept-Ranges: bytes');
-        header('Content-Length: '. filesize($filename)); //告诉浏览器，文件大小
-        header('Content-disposition: attachment; filename='.$filename); //文件名
-        //针对大文件，规定每次读取文件的字节数为4096字节，直接输出数据
-        $read_buffer=4096;
-        $handle=fopen($data['info_path'], 'r');
-        //总的缓冲的字节数
-        $sum_buffer=0;
-        //只要没到文件尾，就一直读取
-        while(!feof($handle) && $sum_buffer<filesize($filename)) {
-            echo fread($handle,$read_buffer);
-            $sum_buffer+=$read_buffer;
-        }
-        //关闭句柄
-        fclose($handle);
+        $zip->close();
+        //下载zip文件	
+        header("Content-Type: application/zip");
+        header("Content-Length: " . filesize($zipname));
+        header("Content-Disposition: attachment; filename=". basename($zipname));
+        readfile($zipname);
         exit;
-
-
-        // header("Cache-Control: public");
-        // header("Content-Description: File Transfer");
-        // header('Content-disposition: attachment; filename='.$filename); //文件名
-        
-        // header("Content-Transfer-Encoding: binary"); //告诉浏览器，这是二进制文件
-        // header('Content-Length: '. filesize($filename)); //告诉浏览器，文件大小
-        // @readfile($filename);
     }else{
+        $data=$data[0];
         //通过header()发送头信息
-        header('Content-type: '.$data['info_filetype']);
-        header('Accept-Ranges: bytes');
-        header('Accept-Length: '.$data['info_filesize']);
+        header('Content-Type: ' . $data['info_filetype']);
+        header('Accept-Length: ' . filesize($data['info_path']));
         header('Content-Disposition: attachment; filename="'.$data['info_title'].'"');
-        //针对大文件，规定每次读取文件的字节数为4096字节，直接输出数据
-        $read_buffer=4096;
-        $handle=fopen($data['info_path'], 'r');
-        //总的缓冲的字节数
-        $sum_buffer=0;
-        //只要没到文件尾，就一直读取
-        while(!feof($handle) && $sum_buffer<$data['info_filesize']) {
-            echo fread($handle,$read_buffer);
-            $sum_buffer+=$read_buffer;
-        }
-        //关闭句柄
-        fclose($handle);
+        readfile($data['info_path']);
         exit;
     }
     return ;

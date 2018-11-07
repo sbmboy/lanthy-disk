@@ -30,7 +30,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                         $info = $db->querySingle($sql,true);
                         $new_path = $father_path.'/'.base64_encode($info['info_title']);
                         if(rename($info['info_path'],$new_path)){
-                            $sql = "UPDATE hl_info SET info_path={$new_path},info_father=".intval($_POST['info_rowid'])." WHERE rowid=".intval($rowid);
+                            $sql = "UPDATE hl_info SET info_path='{$new_path}',info_father=".intval($_POST['info_rowid'])." WHERE rowid=".intval($rowid);
                             $db->exec($sql);
                         }
                     }
@@ -146,6 +146,8 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     // 关闭数据库
                     $db->exec("end transaction");
                     $db->close();
+                }else{
+                    header("location:/show.php?id=".intval($_GET['id']));
                 }
                 break;
             case 'password':
@@ -169,22 +171,13 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                 $db->exec("begin exclusive transaction");
                 $rowids = explode(',',$_GET['rowid']);
-                // var_dump($rowids);
-                // exit;
                 foreach($rowids as $rowid){
                     // 先获取文件相关信息
                     $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($rowid);
                     $info[] = $db->querySingle($sql,true);
                 }
-                
-                // 先获取文件相关信息
-                // $sql = "SELECT info_title,info_path,info_filetype,info_filesize FROM hl_info WHERE rowid=".intval($_GET['rowid']);
-                // $info = $db->querySingle($sql,true);
-                // 关闭数据库
                 $db->exec("end transaction");
                 $db->close();
-                // var_dump($info);
-                // exit;
                 // 下载资源
                 downloadFile($info);
                 header("location:/show.php?id=".intval($_GET['id']));
@@ -786,10 +779,16 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                         <div class="file-name" style="width:60%">
                                                             <div class="text">
                                                                 <?php echo $isCategory?'<a href="?id='.$list['rowid'].'" class="pubNp2V" title="打开 '.$list['info_title'].'">'.$list['info_title'].'</a>':'<span class="pubNp2V">'.$list['info_title'].'</span>'; ?>
+                                                                <?php if($trash){ 
+                                                                    $tmp=explode('/',$list['info_path']);
+                                                                    // echo implode("/",base64_decode($tmp));
+                                                                    foreach($tmp as $v) echo base64_decode($v).'/';
+                                                                } ?>
                                                             </div>
                                                             <div class="operate" style="display:block">
                                                                 <div class="x-button-box" style="position: absolute; top: 0px; line-height: normal; visibility: visible; width: 0px; padding-left: 0px; display: block;">
                                                                     <?php if($trash){ ?>
+                                                                    
                                                                     <a class="g-button" href="?id=<?=$id?>&action=publish&rowid=<?=$list['rowid']?>" title="还原" style="display: inline-block;">
                                                                         <span class="g-button-right">
                                                                             <em class="icon icon-recovery" title="还原"></em>
@@ -973,7 +972,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 </div>
                 <div class="dlg-bd" id="dlg-bd" style="width: 1600px; height: 300px;">
                     <div class="module-showPic clearfix" id="module-showPic" style="width: 1480px; height: 280px;">
-                        <div class="img-wrap">
+                        <div class="img-wrap img-nav">
                             <?php if(strstr($view['info_filetype'],'image')){
                                 $image=true;
                             ?>
@@ -986,17 +985,15 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                             <?php }else{
                                 echo '暂不支持此格式文件的预览，请下载后查看';
                             }?>
-                        </div>
-                        <div node-type="img-nav" class="img-nav">
                             <div class="img-nav-left" style="display:inline;"> 
-                                <a href="?id=<?=$id?>&action=priview&rowid=<?=($_GET['rowid']-1)?>">
+                                <a href="?id=<?=$id?>&action=priview&rowid=<?=$lanthy->getPreId($id,$_GET['rowid']);?>">
                                     <span class="pre-arrow">
                                         <em class="pre-arrow-content icon icon-picpre-before"></em>
                                     </span>
                                 </a>
                             </div>
                             <div class="img-nav-right" style="display:inline;">
-                                <a href="?id=<?=$id?>&action=priview&rowid=<?=($_GET['rowid']+1)?>">
+                                <a href="?id=<?=$id?>&action=priview&rowid=<?=$lanthy->getNextId($id,$_GET['rowid'])?>">
                                     <span node-type="next-arrow" class="next-arrow">
                                         <em class="next-arrow-content icon icon-picpre-next"></em>
                                     </span>
@@ -1138,7 +1135,6 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                             <dd class="g-clearfix">
                                 <div class="b-input b-fl b-share-n">
                                     <input id="share-offline-link" name="user_email" class="share-n" type="text">
-                                    <label class="input-placeholder">密码默认为123456，设置后用户可自行修改</label>
                                 </div>
                             </dd>
                         </dl>
@@ -1204,7 +1200,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                             }
                                         ?>
                                     </select>
-                                    <label class="input-placeholder">密码默认为123456，设置后用户可自行修改</label>
+                                    <label class="input-placeholder">只可以选择当前文件夹的子文件夹</label>
                                 </div>
                             </dd>
                         </dl>
