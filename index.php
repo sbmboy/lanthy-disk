@@ -10,7 +10,7 @@ if(!file_exists('DATA/'.$dbname)){
     // 启动安装程序
     set_time_limit(0);
     if(!is_dir('DATA')) mkdir('DATA');
-    if(!is_dir(base64_encode('全部文件'))) mkdir(base64_encode('全部文件'));
+    if(!is_dir('全部文件')) mkdir('全部文件');
 	if(!extension_loaded('sqlite3')) die("检查php.in文件是否支持sqlite3数据库！");
     $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
 	$db->exec("begin exclusive transaction");
@@ -48,7 +48,7 @@ if(!file_exists('DATA/'.$dbname)){
     $db->exec("CREATE INDEX info_info_posttime on hl_info (info_posttime DESC)");
     $db->exec("CREATE INDEX info_info_filesize on hl_info (info_filesize)");
     // 写入根目录
-    $sql="INSERT INTO hl_info (\"info_title\", \"info_path\", \"info_father\", \"info_posttime\", \"info_filetype\", \"info_tag\", \"info_filesize\", \"info_status\", \"info_author\") VALUES ('".$db->escapeString('全部文件')."','".base64_encode('全部文件')."',0,".time().",'category',NULL,0,'publish','系统')";
+    $sql="INSERT INTO hl_info (\"info_title\", \"info_path\", \"info_father\", \"info_posttime\", \"info_filetype\", \"info_tag\", \"info_filesize\", \"info_status\", \"info_author\") VALUES ('".$db->escapeString('全部文件')."','全部文件',0,".time().",'category',NULL,0,'publish','系统')";
     $db->exec($sql);
 
 

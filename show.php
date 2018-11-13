@@ -28,7 +28,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                         //获取文件路径信息
                         $sql = "SELECT info_title,info_path FROM hl_info WHERE rowid=".intval($rowid);
                         $info = $db->querySingle($sql,true);
-                        $new_path = $father_path.'/'.base64_encode($info['info_title']);
+                        $new_path = $father_path.'/'.$info['info_title'];
                         if(rename($info['info_path'],$new_path)){
                             $sql = "UPDATE hl_info SET info_path='{$new_path}',info_father=".intval($_POST['info_rowid'])." WHERE rowid=".intval($rowid);
                             $db->exec($sql);
@@ -194,7 +194,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     // 如果是文件，好办，修改文件路径,如果是目录，还需要修改目录里面的文件路径
                     if(is_dir($info['info_path'])){
                         // 替换成新路径
-                        $info_path_new = str_replace('/'.base64_encode($info['info_title']),'/'.base64_encode($_POST['info_title']),$info['info_path']);
+                        $info_path_new = str_replace('/'.$info['info_title'],'/'.$_POST['info_title'],$info['info_path']);
                         
                         if(!is_dir($info_path_new)){
                             if(rename($info['info_path'],$info_path_new)){
@@ -202,13 +202,13 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                 $sql = "UPDATE hl_info SET info_title='".$db->escapeString($_POST['info_title'])."',info_path='".$db->escapeString($info_path_new)."' WHERE rowid=".intval($_GET['rowid']);
                                 $db->exec($sql);
                                 // 更新子文件
-                                $sql = "UPDATE hl_info SET info_path = REPLACE(info_path, '/".base64_encode($info['info_title'])."', '/".base64_encode($_POST['info_title'])."') WHERE info_father =".$info['rowid'];
+                                $sql = "UPDATE hl_info SET info_path = REPLACE(info_path, '/".$info['info_title']."', '/".$_POST['info_title']."') WHERE info_father =".$info['rowid'];
                                 $db->exec($sql);
                             }
                         }
                     }else{
                         // 替换成新路径
-                        $info_path_new = str_replace('/'.base64_encode($info['info_title']),'/'.base64_encode($_POST['info_title']),$info['info_path']);
+                        $info_path_new = str_replace('/'.$info['info_title'],'/'.$_POST['info_title'],$info['info_path']);
                         if(!file_exists($info_path_new)){
                             if(rename($info['info_path'],$info_path_new)){
                                 // 更新数据库
@@ -282,17 +282,19 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 if(isset($_POST['info_title'])&&$_POST['info_title']!=''){
                     $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                     $db->exec("begin exclusive transaction");
+                    // 
+                    $_POST['info_title'] = str_replace('/','',$_POST['info_title']);
+                    $_POST['info_title'] = $db->escapeString(trim($_POST['info_title']));
                     // 获取父路径
                     $sql = "SELECT info_path FROM hl_info WHERE rowid=".intval($id);
                     $father_path = $db->querySingle($sql);
-                    if(!is_dir($father_path.'/'.base64_encode($_POST['info_title']))){
-                        $check = mkdir($father_path.'/'.base64_encode($_POST['info_title']));
-                        if($check){
+                    if(!is_dir($father_path.'/'.$_POST['info_title'])){
+                        if(mkdir($father_path.'/'.$_POST['info_title'])){
                             // 获取product_tag
                             preg_match_all('/./u', $_POST['info_title'], $info_tag);
                             $info_tag = implode(",",$info_tag[0]);
                             //写入数据库
-                            $sql="INSERT INTO hl_info (\"info_title\", \"info_path\", \"info_father\", \"info_posttime\", \"info_filetype\", \"info_tag\", \"info_filesize\", \"info_status\", \"info_author\") VALUES ('".$db->escapeString($_POST['info_title'])."','".$father_path.'/'.base64_encode($_POST['info_title'])."',".intval($_GET['id']).",".time().",'category','".$db->escapeString($info_tag)."',0,'publish','".$_SESSION['loginStatus']['nickname']."')";
+                            $sql="INSERT INTO hl_info (\"info_title\", \"info_path\", \"info_father\", \"info_posttime\", \"info_filetype\", \"info_tag\", \"info_filesize\", \"info_status\", \"info_author\") VALUES ('{$_POST['info_title']}','".$father_path.'/'.$_POST['info_title']."',".intval($_GET['id']).",".time().",'category','".$db->escapeString($info_tag)."',0,'publish','".$_SESSION['loginStatus']['nickname']."')";
                             $db->exec($sql);
                             // 更新索引
                             updateIndex();
@@ -317,8 +319,8 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     // 更新写入数据库
                     for($i=0;$i<count($_FILES["files"]["type"]);$i++){
                         // 保存文件
-                        $info_title = $_FILES["files"]["name"][$i];
-                        $info_path = $dir_path.'/'.base64_encode($info_title);
+                        $info_title = $db->escapeString($_FILES["files"]["name"][$i]);
+                        $info_path = $dir_path.'/'.$info_title;
                         // 获取product_tag
                         preg_match_all('/./u', $info_title, $info_tag);
                         $info_tag = implode(",",$info_tag[0]);
@@ -359,13 +361,11 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                 break;
             
             default:
-                
                 break;
         }
     }else{
         $action=false;
     }
-
 }else{
     header("location:/show.php?id=1");
 }
@@ -778,11 +778,13 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                         <div class="rkua3EGO <?=$icons[$list['info_filetype']]?>"></div>
                                                         <div class="file-name" style="width:60%">
                                                             <div class="text">
-                                                                <?php echo $isCategory?'<a href="?id='.$list['rowid'].'" class="pubNp2V" title="打开 '.$list['info_title'].'">'.$list['info_title'].'</a>':'<span class="pubNp2V">'.$list['info_title'].'</span>'; ?>
-                                                                <?php if($trash){ 
-                                                                    $tmp=explode('/',$list['info_path']);
-                                                                    // echo implode("/",base64_decode($tmp));
-                                                                    foreach($tmp as $v) echo base64_decode($v).'/';
+                                                                <?php 
+                                                                if($trash){
+                                                                    echo '<span class="pubNp2V">'.$list['info_path'].'</span>';
+                                                                }elseif($isCategory){
+                                                                    echo '<a href="?id='.$list['rowid'].'" class="pubNp2V" title="打开 '.$list['info_title'].'">'.$list['info_title'].'</a>';
+                                                                }else{
+                                                                    echo '<span class="pubNp2V">'.$list['info_title'].'</span>';
                                                                 } ?>
                                                             </div>
                                                             <div class="operate" style="display:block">
