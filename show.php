@@ -11,7 +11,6 @@ if(isset($_GET['id'])&&$_GET['id']>0){
     // 获取列表，默认列表
     $lists=$lanthy->getLists($id);
     $totalSize = $lanthy->getFileSize(1);
-    
     if(isset($_GET['action'])){
         $action=$_GET['action'];
         switch ($action) {
@@ -216,9 +215,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                 $db->exec($sql);
                             }
                         }
-
                     }
-
                     // 关闭数据库
                     $db->exec("end transaction");
                     $db->close();
@@ -306,11 +303,9 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     header("location:/show.php?id=".intval($_GET['id']));
                 }
                 break;
-
             case 'upload':
                 // 上传
                 if(isset($_FILES["files"]["tmp_name"])&&!empty($_FILES["files"]["tmp_name"][0])){
-                    $totalsize = 0;
                     $db = new SQLite3("DATA/{$dbname}",SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
                     $db->exec("begin exclusive transaction");
                     // 先获取分类的path
@@ -330,36 +325,25 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                             $info_path = $dir_path.'/'.$info_title;
                         }
                         $info_type = $_FILES["files"]["type"][$i];
-                        // $file_type = explode("/",$_FILES["files"]["type"][$i]);
-                        // $info_type = $file_type[1];
-
                         $info_size = $_FILES["files"]["size"][$i];
-                        $totalsize += $info_size;
-
                         // 上传文件
-                        $check = move_uploaded_file($_FILES["files"]["tmp_name"][$i], $info_path);
-                        if($check){
+                        if(move_uploaded_file($_FILES["files"]["tmp_name"][$i], $info_path)){
                             //写入数据库
                             $sql="INSERT INTO hl_info (\"info_title\", \"info_path\", \"info_father\", \"info_posttime\", \"info_filetype\", \"info_tag\", \"info_filesize\", \"info_status\", \"info_author\") VALUES ('".$db->escapeString($info_title)."','".$db->escapeString($info_path)."',".intval($_GET['id']).",".time().",'".$db->escapeString($info_type)."','".$db->escapeString($info_tag)."',".intval($info_size).",'publish','".$_SESSION['loginStatus']['nickname']."')";
-                            $db->exec($sql);   
+                            $db->exec($sql);
+                            // 更新文件大小数据
+                            $sql = "UPDATE hl_info SET info_filesize=info_filesize+{$info_size} WHERE rowid=1"; // 更新根目录大小
+                            $db->exec($sql);
                         }
                     }
-
-                    // 更新文件大小数据
-                    $sql = "UPDATE hl_info SET info_filesize=info_filesize+{$totalsize} WHERE rowid=1"; // 更新根目录大小
-                    $db->exec($sql);
-
                     // 更新索引
                     updateIndex();
-
                     // 关闭数据库
                     $db->exec("end transaction");
                     $db->close();
                     header("location:/show.php?id=".intval($_GET['id']));
-
                 }
                 break;
-            
             default:
                 break;
         }
