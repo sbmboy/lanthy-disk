@@ -65,6 +65,13 @@ class LANTHY{
         $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_filetype='category' AND info_father = ".intval($id);
 		return $this->getData($sql);
     }
+    /**
+     * getAllCategories
+     */
+    function getAllCategories(){
+        $sql="SELECT rowid,* FROM hl_info WHERE info_status = 'publish' AND info_filetype='category' ORDER BY info_path ASC";
+		return $this->getData($sql);
+    }
 
     /**
      * getLists 

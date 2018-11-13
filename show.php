@@ -39,7 +39,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                     $db->close();
                     header("location:/show.php?id=".intval($_GET['id']));
                 }else{
-                    $categories = $lanthy->getCategories($_GET['id']);
+                    $categories = $lanthy->getAllCategories();
                     $rowids = explode(',',$_GET['rowid']);
                     $rowids = array_unique($rowids);
                 }
@@ -811,6 +811,12 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                                                                 <span class="text">下载</span>
                                                                             </span>
                                                                         </a>
+                                                                        <a class="g-button" href="?id=<?=$list['info_father']?>&action=move&rowid=<?=$list['rowid']?>" title="移动" style="display: inline-block;">
+                                                                            <span class="g-button-right">
+                                                                                <em class="icon icon-recovery" title="移动"></em>
+                                                                                <span class="text">移动</span>
+                                                                            </span>
+                                                                        </a>
                                                                         <?php endif; ?>
                                                                         <a class="g-button" href="?id=<?=$list['info_father']?>&action=rename&rowid=<?=$list['rowid']?>&title=<?=$list['info_title']?>" title="重命名"
                                                                         style="display: inline-block;">
@@ -1198,7 +1204,7 @@ if(isset($_GET['id'])&&$_GET['id']>0){
                                     <select name="info_rowid" id="share-offline-link" class="share-n">
                                         <?php
                                             foreach($categories as $category){
-                                                echo "<option value=\"{$category['rowid']}\">{$category['info_title']}</option>";
+                                                echo "<option value=\"{$category['rowid']}\">{$category['info_path']}</option>";
                                             }
                                         ?>
                                     </select>
