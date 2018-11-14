@@ -189,15 +189,15 @@ function format_date($time){
     }
 }
 // 格式化文件大小
-function format_size($size){
+function format_size($size,$prec=1){
     if($size>1073741824){
-        return ceil($size/1073741824).' GB';
+        return round($size/1073741824,$prec).' GB';
     }elseif($size>1048576){
-        return ceil($size/1048576).' MB';
+        return round($size/1048576,$prec).' MB';
     }elseif($size>1024){
-        return ceil($size/1024).' KB';
+        return round($size/1024,$prec).' KB';
     }else{
-        return ceil($size).' B';
+        return round($size,$prec).' B';
     }
 }
 // 文件下载
