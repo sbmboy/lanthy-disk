@@ -1028,6 +1028,18 @@ if(isset($_GET['id'])&&$_GET['id']>0){
             num = num+90
             document.getElementById('viewpic-image').style.WebkitTransform="rotate(" + num + "deg)";
         }
+        // 监听键盘
+        document.onkeydown=function(event){
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if(e && e.keyCode==38 || e && e.keyCode==37){
+                // alert('37=左键');
+                location.href="?id=<?=$id?>&action=priview&rowid=<?=$lanthy->getPreId($id,$_GET['rowid']);?>";
+            }
+            if(e && e.keyCode==40 || e && e.keyCode==39){
+                // alert('39=右键');
+                location.href="?id=<?=$id?>&action=priview&rowid=<?=$lanthy->getNextId($id,$_GET['rowid'])?>";
+            }
+        }; 
     </script>
     <!-- 预览 -->
     <?php endif; ?>
